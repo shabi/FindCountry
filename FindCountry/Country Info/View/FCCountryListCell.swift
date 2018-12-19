@@ -7,58 +7,44 @@
 //
 
 import UIKit
-
-protocol FCCountryListCellDelegate: class {
-    func itemCountChanged(itemPrice: Float)
-}
+import SwiftSVG
 
 class FCCountryListCell: UICollectionViewCell {
     
-    @IBOutlet weak var itemImageView: UIImageView!
+    @IBOutlet weak var flagSVGView: UIView!
+    @IBOutlet weak var countryName: UILabel!
     
-    @IBOutlet weak var itemName: UILabel!
-    @IBOutlet weak var itemSalePrice: UILabel!
-    @IBOutlet weak var itemCount: UILabel!
-    @IBOutlet weak var itemSize: UILabel!
-    var totalItemCount = 1
-    var indexPath: IndexPath?
-    
-    weak var delegate: FCCountryListCellDelegate?
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
     }
-    @IBAction func itemCountChanged(_ sender: Any) {
-    }
-    
-    
-    func configureCountryList(countryInfo: FCCountryModel) {
-        
-        //        if let checkedUrl = URL(string: (itemDetails.thumbnailImage) ?? "") {
-        //            self.itemImageView.contentMode = .scaleAspectFit
-        //            downloadImage(url: checkedUrl)
-        //        }
+    //Function to excuted code in background
+    //i.e will be used to load images
+    func BG(_ block: @escaping ()->Void) {
+        DispatchQueue.global(qos: .default).async(execute: block)
     }
     
-    
-    func getDataFromUrl(url: URL, completion: @escaping (_ data: Data?, _  response: URLResponse?, _ error: Error?) -> Void) {
-        URLSession.shared.dataTask(with: url) {
-            (data, response, error) in
-            completion(data, response, error)
-            }.resume()
+    //Function to excuted code in foreground
+    //Once loading get completes it will render on main thread here
+    func UI(_ block: @escaping ()->Void) {
+        DispatchQueue.main.async(execute: block)
     }
     
-    func downloadImage(url: URL) {
-        print("Download Started")
-        getDataFromUrl(url: url) { (data, response, error)  in
-            guard let data = data, error == nil else { return }
-            print(response?.suggestedFilename ?? url.lastPathComponent)
-            print("Download Finished")
-            DispatchQueue.main.async() { () -> Void in
-                self.itemImageView.image = UIImage(data: data)
+    func configureCountryList(countryInfo: FCCountryModel?) {
+        if let country = countryInfo {
+            self.countryName.text = country.name
+            
+            self.BG {
+                if let flagUrl = country.flag, let svgURL = URL(string: flagUrl) {
+                    _ = UIView(SVGURL: svgURL) { (svgLayer) in
+                        self.UI {
+                            let _ = self.flagSVGView.layer.sublayers?.popLast()
+                            svgLayer.resizeToFit(self.flagSVGView.bounds)
+                            self.flagSVGView.contentMode = .scaleToFill
+                            self.flagSVGView.layer.addSublayer(svgLayer)
+                        }
+                    }
+                }
             }
         }
     }
 }
-
-

@@ -33,6 +33,6 @@ public protocol SKServiceManagerImageDownloadDelegate {
 
 protocol APIDelegateViewModel: class {
     
-    func apiSuccess(serviceType: String, model: Any?)
+    func apiSuccess(serviceType: String, model: Any?, isFromCache: Bool)
     func apiFailure(serviceType: String, error: Error)
 }

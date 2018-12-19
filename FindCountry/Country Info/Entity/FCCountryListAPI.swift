@@ -3,7 +3,7 @@
 //  ShopOnGo
 //
 //  Created by eCOM-shabi.naqvi on 14/11/18.
-//  Copyright © 2018 pixelgeniel. All rights reserved.
+//  Copyright © 2018 shabi. All rights reserved.
 //
 
 import Foundation
@@ -14,47 +14,41 @@ class FCCountryListAPI {
     
     weak var viewModelDelegate: APIDelegateViewModel?
     var serviceType:  APIConstants.ServiceType = .none
-    var loginParam: [String: String]?
+    var country: String?
+    
     enum EventType {
-        case fetchLogin
-        case fetchRegistration
+        case fetchCountry
     }
     
     let eventType: EventType
     
-    init(serviceType: APIConstants.ServiceType, type: EventType, delegateViewModel: APIDelegateViewModel, loginInfo: [String: String]?) {
+    init(serviceType: APIConstants.ServiceType, type: EventType, delegateViewModel: APIDelegateViewModel, searchText: String?) {
         self.eventType = type
         self.viewModelDelegate = delegateViewModel
         self.serviceType = serviceType
-        self.loginParam = loginInfo
+        self.country = searchText
     }
     
     func event() -> NSNotification.Name {
-        if self.serviceType == APIConstants.ServiceType.login {
-            return FCUtility.notificationName(name: APIConstants.PostNotify.loginEvent)
-        }
-        return FCUtility.notificationName(name: APIConstants.PostNotify.registrationEvent)
+       return FCUtility.notificationName(name: APIConstants.PostNotify.searchCountryEvent)
     }
     
     func errorEvent() -> NSNotification.Name {
-        if self.serviceType == APIConstants.ServiceType.login {
-            return FCUtility.notificationName(name: APIConstants.PostNotify.loginEventError)
-        }
-        return FCUtility.notificationName(name: APIConstants.PostNotify.registrationEventError)
+       return FCUtility.notificationName(name: APIConstants.PostNotify.searchCountryError)
     }
     
     func makeModel(json: JSON) -> SGModelMappable? {
-        if self.serviceType == APIConstants.ServiceType.login {
+        if self.serviceType == APIConstants.ServiceType.getCountry {
             return FCCountryModel(json: json)
         }
         return nil
     }
     
     func fetchData() {
-        self.fetchItemData()
+        self.fetchCountryListData()
     }
     
-    fileprivate func fetchItemData() {
+    fileprivate func fetchCountryListData() {
         SKServiceManager(dataSource: self, delegate: self, serviceType: self.serviceType.rawValue)
     }
 }
@@ -70,29 +64,23 @@ extension FCCountryListAPI: SKServiceManagerDelegate {
         } else {
             SGProgressView.shared.hideProgressView()
         }
-        print("didReceiveError")
-        return [:]
+        return nil
     }
     
     func didReceiveResponse(serviceType: String, headerResponse: HTTPURLResponse?,
                             finalResponse:Any?) {
         
         if let response = finalResponse {
-            if serviceType == APIConstants.ServiceType.login.rawValue {
-                let loginInfo = FCCountryModel(object: response)
-                self.viewModelDelegate?.apiSuccess(serviceType: serviceType, model: loginInfo)
-            } else if serviceType == APIConstants.ServiceType.registration.rawValue {
-                self.viewModelDelegate?.apiSuccess(serviceType: serviceType, model: nil)
+            if serviceType == APIConstants.ServiceType.getCountry.rawValue {
+                let countryList = FCCountriesFound(object: response)
+                self.viewModelDelegate?.apiSuccess(serviceType: serviceType, model: countryList, isFromCache: false)
             }
-            
-            print("finalResponse")
         } else {
             if let errorMessage = (finalResponse as! NSDictionary)["error_description"] {
                 FCUtility.showAlert(title: "Error", message: errorMessage as? String, actionTitles: "OK", actions: nil)
             }
             SGProgressView.shared.hideProgressView()
         }
-        print("didReceiveResponse")
     }
     
     fileprivate func serviceResponse(response: Any) {
@@ -102,29 +90,7 @@ extension FCCountryListAPI: SKServiceManagerDelegate {
 }
 
 extension FCCountryListAPI: SKServiceManagerDataSource {
-    func requestParameters(serviceType: String) -> [String : AnyObject]? {
-        print("requestParameters")
-        
-        var param: [String: AnyObject]?
-        if serviceType == APIConstants.ServiceType.login.rawValue, let paramInfo = self.loginParam {
-            param = [
-                "UserName": paramInfo["UserName"] as AnyObject,
-                "Password": paramInfo["Password"] as AnyObject,
-                "grant_type": "password" as AnyObject,
-            ]
-        } else if serviceType == APIConstants.ServiceType.registration.rawValue, let paramInfo = self.loginParam {
-            param = [
-                "UserEmail": paramInfo["UserEmail"] as AnyObject,
-                "UserPassword": paramInfo["UserPassword"] as AnyObject,
-                "Name": paramInfo["Name"] as AnyObject,
-                "UserContact": paramInfo["UserContact"] as AnyObject,
-                "ZipCode": paramInfo["ZipCode"] as AnyObject,
-                "UserAddress": paramInfo["UserAddress"] as AnyObject,
-                "CreatedBy": "IOS" as AnyObject,
-            ]
-        }
-        return param
-    }
+    func requestParameters(serviceType: String) -> [String : AnyObject]? { return nil}
     
     func requestHeaders(serviceType: String) -> [String : String]? {
         print("requestHeaders")
@@ -135,8 +101,10 @@ extension FCCountryListAPI: SKServiceManagerDataSource {
     func requestUrlandHttpMethodType(serviceType: String) -> (url: String?,
         methodType: SKConstant.HTTPMethod?) {
             var urlAndMethodType: (url: String?, methodType: SKConstant.HTTPMethod?)
-            urlAndMethodType.url = serviceType == APIConstants.ServiceType.login.rawValue ? APIConstants.ApiUrls.loginUrl : APIConstants.ApiUrls.registrationUrl
-            urlAndMethodType.methodType = .post
+            if let country = self.country {
+                urlAndMethodType.url = APIConstants.ApiUrls.countryUrl + country
+            }
+            urlAndMethodType.methodType = .get
             return urlAndMethodType
     }
 }

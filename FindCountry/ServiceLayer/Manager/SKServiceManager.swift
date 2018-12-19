@@ -31,15 +31,14 @@ class Session  {
 public class SKServiceManager {
     
     //MARK: - Properties
+    public static let shared = SKServiceManager()
     private var configuration = SKServiceConfigauration()
     private var sessionManager: Alamofire.SessionManager?
     private var currentRequest: Alamofire.Request?
-    private var tokenRefreshRequest: Alamofire.Request?
     
     private var serviceType: String = ""
     private var delegate: SKServiceManagerDelegate?
     private var datasource: SKServiceManagerDataSource?
-    private var isTokenRefreshed = false
     
     private var session: Session?
     
@@ -51,17 +50,17 @@ public class SKServiceManager {
     /// Initializer method for Service Manager class
     @discardableResult
     public init(dataSource: SKServiceManagerDataSource? = nil, delegate: SKServiceManagerDelegate? = nil,
-                serviceType: String) {
+                serviceType: String? = nil) {
         
         // Initializations
         self.initializeNetworkReachability()
         
-        self.serviceType = serviceType
+        self.serviceType = serviceType ?? ""
         self.datasource = dataSource
         self.delegate = delegate
         
         // URL
-        let requestURLAndMethodType = self.datasource?.requestUrlandHttpMethodType(serviceType: serviceType)
+        let requestURLAndMethodType = self.datasource?.requestUrlandHttpMethodType(serviceType: serviceType ?? "")
         let url = requestURLAndMethodType?.url
         
         // HTTP Method
@@ -71,10 +70,10 @@ public class SKServiceManager {
         }
         
         // Headers
-        let headers: [String: String]? = configuration.addCustomHeaders(customHeaders: self.datasource?.requestHeaders(serviceType: serviceType))
+        let headers: [String: String]? = configuration.addCustomHeaders(customHeaders: self.datasource?.requestHeaders(serviceType: serviceType ?? ""))
         
         // Parameters
-        let parameters: [String: AnyObject]? = self.datasource?.requestParameters(serviceType: serviceType)
+        let parameters: [String: AnyObject]? = self.datasource?.requestParameters(serviceType: serviceType ?? "")
         
         if Utility.isNilOrEmpty(string: url as NSString?) {
             self.handleFailure(error: Utility.createErrorInstance(title: "Improper URL", message: "Please check the url you have requested", errorCode: 401))
@@ -131,7 +130,7 @@ public class SKServiceManager {
         let escapedString = url?.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
         let destinationURL = URL(string: escapedString!)
         self.currentRequest =  Alamofire.request(destinationURL!, method: method!, parameters: parameters,
-                                                 encoding: self.serviceType == "login" ? URLEncoding.httpBody : JSONEncoding.default, headers: headers)
+                                                 encoding: JSONEncoding.default, headers: headers)
             .responseString { response in
                 switch(response.result) {
                 case .success:

@@ -1,4 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14315.18" systemVersion="18A391" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="FCCountry" representedClassName="FCCountry" syncable="YES">
+        <attribute name="altSpellings" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="area" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="borders" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <attribute name="capital" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="flag" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nativeName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="population" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="region" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="timezones" optional="YES" attributeType="Transformable" syncable="YES"/>
+        <relationship name="currencies" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="FCCurrencies" syncable="YES"/>
+        <relationship name="languages" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="FCLanguages" syncable="YES"/>
+        <relationship name="reginonalBlocs" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="FCRegionalBlocs" syncable="YES"/>
+        <relationship name="translation" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="FCTranslations" syncable="YES"/>
+    </entity>
+    <entity name="FCCurrencies" representedClassName="FCCurrencies" syncable="YES">
+        <attribute name="code" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="symbol" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="FCLanguages" representedClassName="FCLanguages" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nativeName" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="FCRegionalBlocs" representedClassName="FCRegionalBlocs" syncable="YES">
+        <attribute name="acronym" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <entity name="FCTranslations" representedClassName="FCTranslations" syncable="YES">
+        <attribute name="br" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="de" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="es" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fa" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="fr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="hr" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="it" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="ja" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nl" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="pt" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="FCCountry" positionX="-341.4921875" positionY="-27.546875" width="128" height="253"/>
+        <element name="FCCurrencies" positionX="-78.65625" positionY="-24.34765625" width="128" height="88"/>
+        <element name="FCLanguages" positionX="91.54296875" positionY="18.19921875" width="128" height="73"/>
+        <element name="FCTranslations" positionX="18" positionY="135" width="128" height="193"/>
+        <element name="FCRegionalBlocs" positionX="-185.9921875" positionY="277.57421875" width="128" height="58"/>
+    </elements>
 </model>

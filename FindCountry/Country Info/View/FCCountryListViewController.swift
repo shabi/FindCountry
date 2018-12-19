@@ -3,23 +3,51 @@
 //  ShopOnGo
 //
 //  Created by eCOM-shabi.naqvi on 14/11/18.
-//  Copyright © 2018 pixelgeniel. All rights reserved.
+//  Copyright © 2018 shabi. All rights reserved.
 //
 
 import Foundation
 import UIKit
 
 class FCCountryListViewController: UIViewController {
+    
     var countryListViewModel: FCCountryListViewModel?
-    @IBOutlet weak var itemListCollectionView: UICollectionView!
+    @IBOutlet weak var searchBarView: UISearchBar!
+    @IBOutlet weak var countryListCollectionView: UICollectionView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.countryListViewModel = FCCountryListViewModel(viewController: self)
+        self.countryListViewModel?.fetchEventInfo(serviceType: .getCountry, searchText: "")
     }
     
     override func viewWillAppear( _ animated: Bool) {
         super.viewWillAppear(animated)
         setupUI()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(notification:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(notification: Notification) {
+        guard let keyboardInfo = notification.userInfo else { return }
+        if let keyboardFrame: NSValue = keyboardInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height + 10
+            let contenInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardHeight, right: 0)
+            self.countryListCollectionView.contentInset = contenInset
+        }
+    }
+    
+    @objc func keyboardWillHide(notification: Notification) {
+        let contentInset = UIEdgeInsets.zero
+        self.countryListCollectionView.contentInset = contentInset
     }
     
     override func didReceiveMemoryWarning() {
@@ -27,37 +55,27 @@ class FCCountryListViewController: UIViewController {
     }
     
     func setupUI() {
-        let itemPurchasedCellNib = UINib(nibName: "FCCountryListCell", bundle: nil)
-        self.itemListCollectionView.register(
-            itemPurchasedCellNib, forCellWithReuseIdentifier: "FCCountryListCell")
-//        let itemPurchasedHeaderNib = UINib(nibName: "SGItemPurchasedHeader", bundle: nil)
-//        self.itemListCollectionView.register(itemPurchasedHeaderNib, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "SGItemPurchasedHeader")
-//        let orderPlacedSummaryHeaderNib = UINib(nibName: "SGOrderPlacedSummaryHeader", bundle: nil)
-//        self.itemListCollectionView.register(orderPlacedSummaryHeaderNib, forSupplementaryViewOfKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "SGOrderPlacedSummaryHeader")
         
-    }
-    
-    @IBAction func goToHomePage(_ sender: Any) {
-        if let tabBarController = FCUtility.sharedDelegate.window?.rootViewController as? UITabBarController {
-            tabBarController.selectedIndex = 0
-        }
-        self.dismiss(animated: true, completion: nil)
+        let nav = self.navigationController?.navigationBar
+        nav?.barStyle = UIBarStyle.black
+        nav?.tintColor = UIColor.white
+        nav?.titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.orange]
+        self.navigationItem.title = "Find Countries"
+        
+        let itemPurchasedCellNib = UINib(nibName: "FCCountryListCell", bundle: nil)
+        self.countryListCollectionView.register(
+            itemPurchasedCellNib, forCellWithReuseIdentifier: "FCCountryListCell")
     }
 }
 
 extension FCCountryListViewController: UICollectionViewDataSource {
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 2
+        return 1
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        if section == 0 {
-            return 0
-        } else if section == 1 {
-//            return AppDataManager.shared.cartItems?.count ?? 0
-        }
-        return 0
+        return self.countryListViewModel?.countryModel?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView,
@@ -65,39 +83,17 @@ extension FCCountryListViewController: UICollectionViewDataSource {
         let cell = (collectionView.dequeueReusableCell(
             withReuseIdentifier: "FCCountryListCell",
             for: indexPath) as? FCCountryListCell)!
-        cell.configureCountryList(countryInfo: (countryListViewModel?.countryModel)!)
+        cell.configureCountryList(countryInfo: countryListViewModel?.countryModel?[indexPath.row])
         return cell
     }
     
-//    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-//
-//        var reusableView: UICollectionReusableView! = nil
-//
-//        switch kind {
-//
-//        case UICollectionElementKindSectionHeader:
-//
-//            if indexPath.section == 0 {
-//                if let reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "SGOrderPlacedSummaryHeader", for: indexPath) as? SGOrderPlacedSummaryHeader {
-//                    reusableView.configureView(orderId: self.placeOrder?.orderId ?? "", shopName: AppDataManager.shared.cartItems?.first?.shopName ?? "")
-//                    return reusableView
-//                }
-//
-//            } else if indexPath.section == 1 {
-//                reusableView = collectionView.dequeueReusableSupplementaryView(ofKind: UICollectionElementKindSectionHeader, withReuseIdentifier: "SGItemPurchasedHeader", for: indexPath)
-//            }
-//
-//            return reusableView
-//
-//        case UICollectionElementKindSectionFooter:
-//
-//            return reusableView
-//
-//        default:
-//            assert(false, "Unexpected element kind")
-//            return reusableView
-//        }
-//    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let countryDetailViewController = storyboard.instantiateViewController(withIdentifier: "FCCountryDetailViewController") as! FCCountryDetailViewController
+        countryDetailViewController.countryDetail = countryListViewModel?.countryModel?[indexPath.row]
+        self.navigationController?.pushViewController(countryDetailViewController, animated: true)
+    }
 }
 
 
@@ -107,22 +103,35 @@ extension FCCountryListViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout,
                         sizeForItemAt indexPath: IndexPath) -> CGSize {
         return CGSize(width: collectionView.frame.size.width  , height: 44)
-        
     }
-    
-//    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForHeaderInSection section: Int) -> CGSize {
-//        if section == 0 {
-//            return CGSize(width: collectionView.frame.size.width  , height: 200)
-//        } else if section == 1 {
-//            return CGSize(width: collectionView.frame.size.width  , height: 50)
-//        }
-//        return CGSize.zero
-//    }
 }
 
 extension FCCountryListViewController: ViewController {
     
     func updateView() {
-        self.itemListCollectionView.reloadData()
+        self.countryListCollectionView.reloadData()
     }
 }
+
+extension FCCountryListViewController: UISearchBarDelegate {
+    
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        print("searchBarTextDidBeginEditing")
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+//        self.resetCollectionViewData(searchText:"")
+        print("searchBarCancelButtonClicked")
+    }
+    
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        print("searchBarSearchButtonClicked")
+    }
+    
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        SKServiceManager.shared.cancelRequest()
+        self.countryListViewModel?.fetchEventInfo(serviceType: .getCountry, searchText: searchBar.text)
+        print("searchBar")
+    }
+}
+

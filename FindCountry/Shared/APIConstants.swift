@@ -13,101 +13,28 @@ class APIConstants: NSObject {
     
     public enum ServiceType: String {
         case none
-        case items
-        case login
-        case registration
-        case getUser
-        case placeOrder
-        case getOrderDetail
-        case getTransactions
-        case getSItems
-        case getSShops
+        case getCountry
     }
-    
-    enum Version {
-        static let one = "v1"
-    }
-    
-    enum Results {
-        static let model = "model"
-        static let errorModel = "errorModel"
-    }
-    
+
     enum ApiUrls {
-        static let userUrlStr = "http://azapi.baselinematters.com/api/accounts/userbyemailid/taiseer.joudeh@gmail.com"
-        static let itemUrl = "https://api.walmartlabs.com/v1/items?format=json&apiKey=zu9yxdzx59x32araqkhaermm&upc=%@"
-        
-        static let loginUrl = "http://shopongo.baselinematters.com/sogAuth"
-        static let registrationUrl = "http://shopongo.baselinematters.com/api/UserApi/CustomerRegistration"
-        static let getUserUrl = "http://shopongo.baselinematters.com/api/UserApi/getUsers"
-        
-        static let placeOrderUrl = "http://smartshopapp.baselinematters.com/api/Order/placeOrder"
-        
-        //"http://shopongo.baselinematters.com/api/Order/placeOrder"
-        static let getOrderDetailUrl = "http://smartshopapp.baselinematters.com/api/Order/getOrderDetail"
-        static let getTransactionsUrl = "http://smartshopapp.baselinematters.com/api/Order/getTransactions"
-        static let getSItemsUrl = "http://smartshopapp.baselinematters.com/api/Item/getSItems"
-        static let getSShopsUrl = "http://smartshopapp.baselinematters.com/api/Shop/getSShops"
+        static let countryUrl = "https://restcountries.eu/rest/v2/name/"
+        static let allCountryUrl = "https://restcountries.eu/rest/v2/all"
     }
     
     enum ServiceHeaders {
         static let contentType = "Content-Type"
         static let Authorization = "Authorization"
-        static let cartId = "cart_id"
     }
     
     enum ServiceHeaderValues {
         static let contentType = "application/json"
     }
-    
-    enum StatusCode {
-        static let successStart = 200
-        static let successEnd = 300
-        static let authTokenExpired = 419
-        static let contentNotModified = 304
-        static let conflictError = 409
-    }
-    
-    enum APIState: String {
-        case started
-        case success
-        case failed
-        case inqueue
-    }
-    
-    enum FailureResponseJsonKey {
-        static let statusCode = "statusCode"
-        static let error = "error"
-        static let message = "message"
-        
-    }
-    
+
     enum PostNotify {
-        static let itemsEvent = "items"
-        static let itemsEventError = "itemsError"
-        static let placeOrderEvent = "placeOrder"
-        static let placeOrderEventError = "placeOrderError"
-        static let shopListEvent = "shopList"
-        static let shopListEventError = "shopListError"
-        static let loginEvent = "login"
-        static let loginEventError = "loginError"
-        static let registrationEvent = "registration"
-        static let registrationEventError = "registrationError"
-        static let transactionListEvent = "transactionList"
-        static let transactionListEventError = "transactionEventError"
-        
-    }
-    
-    enum Errors {
-        static let orderNotReady = "order-not-ready"
-        static let orderSubmissionFailed = "OrderSubmissionFailed"
-        static let credentialFailed = "user name or password is incorrect."
-        
+        static let searchCountryEvent = "searchCountry"
+        static let searchCountryError = "searchCountryError"
     }
 }
-
-
-
 
 open class SGProgressView {
     

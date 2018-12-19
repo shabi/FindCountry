@@ -9,7 +9,7 @@ target 'FindCountry' do
     pod 'AlamofireImage', '~> 3.3'
     pod 'SwiftyJSON', '~> 4.0'
     pod 'SwiftyAttributes', '~> 4.1'
-#    pod 'SwiftyBeaver'
+    pod 'SwiftSVG', '~> 2.0'
 #    pod 'CoreStore', '~> 5.0'
 
   target 'FindCountryTests' do
