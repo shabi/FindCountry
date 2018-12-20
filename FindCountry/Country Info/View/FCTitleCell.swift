@@ -62,13 +62,14 @@ class FCCountryDetailHeaderView: UICollectionReusableView {
         label.textAlignment = .left
         label.lineBreakMode = .byWordWrapping
         label.textColor = .black
+        label.minimumScaleFactor = 0.5
         return label
     }()
     
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .blue
+        backgroundColor = .lightGray
         addSubview(self.headerTitle)
         self.headerTitle.translatesAutoresizingMaskIntoConstraints = false
         self.headerTitle.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10).isActive = true

@@ -19,11 +19,13 @@ extension FCCountry {
     @NSManaged public var name: String?
     @NSManaged public var capital: String?
     @NSManaged public var region: String?
+    @NSManaged public var subRegion: String?
     @NSManaged public var population: Int64
     @NSManaged public var area: Int64
     @NSManaged public var nativeName: String?
     @NSManaged public var flag: String?
     @NSManaged public var altSpellings: [String]?
+    @NSManaged public var callingCodes: [String]?
     @NSManaged public var timezones: [String]?
     @NSManaged public var borders: [String]?
     @NSManaged public var currencies: NSOrderedSet?

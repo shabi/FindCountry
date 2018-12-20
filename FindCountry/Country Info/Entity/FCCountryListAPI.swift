@@ -37,7 +37,7 @@ class FCCountryListAPI {
        return FCUtility.notificationName(name: APIConstants.PostNotify.searchCountryError)
     }
     
-    func makeModel(json: JSON) -> SGModelMappable? {
+    func makeModel(json: JSON) -> FCModelMappable? {
         if self.serviceType == APIConstants.ServiceType.getCountry {
             return FCCountryModel(json: json)
         }

@@ -10,7 +10,6 @@ target 'FindCountry' do
     pod 'SwiftyJSON', '~> 4.0'
     pod 'SwiftyAttributes', '~> 4.1'
     pod 'SwiftSVG', '~> 2.0'
-#    pod 'CoreStore', '~> 5.0'
 
   target 'FindCountryTests' do
     inherit! :search_paths

@@ -112,15 +112,7 @@ public class SKServiceManager {
     }
     
     //MARK: - Service Request - Alamofire
-    
     /// This method creates a ‘Request’
-    ///
-    /// - Parameters:
-    ///   - method: Alamofire http type
-    ///   - url: URL to be processed
-    ///   - headers: A dictionary containing all the additional headers
-    ///   - parameters: A dictionary containing all the necessary options
-    
     func processServiceRequest(method: Alamofire.HTTPMethod?, url : String?,
                                headers: [String : String]?,
                                parameters : [String : AnyObject]?) {
@@ -166,14 +158,6 @@ public class SKServiceManager {
     }
     
     //MARK: - Image Download - Alamofire
-    
-    ///  This method creates a ‘Request’
-    ///
-    /// - Parameters:
-    ///   - delegate:
-    ///   - method: Alamofire http type
-    ///   - imageURL: URL of the image to be processed
-    
     public class func downoadImage(imageURL: String?, completionHandler: ((UIImage?) -> Void)?) {
         
         Alamofire.request(imageURL!, method: .get).responseImage { response in
@@ -202,6 +186,4 @@ public class SKServiceManager {
         self.currentRequest?.cancel()
         self.currentRequest = nil
     }
-    
-    
 }

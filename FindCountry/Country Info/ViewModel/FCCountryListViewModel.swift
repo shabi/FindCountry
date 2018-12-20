@@ -46,10 +46,6 @@ extension FCCountryListViewModel: APIDelegateViewModel {
                 self.viewController?.updateView()
             }
         } else if serviceType == APIConstants.ServiceType.getCountry.rawValue, let info = model as? FCCountriesFound, let countryArray = info.countryInfo {
-            
-            //Cache to DB
-            FCDatabaseHelper.shared.save(countryInfo: countryArray)
-            
             self.countryModel = countryArray
             DispatchQueue.main.async {
                 self.viewController?.updateView()
@@ -72,10 +68,10 @@ extension FCCountryListViewModel: APIDelegateViewModel {
                 country.name = eachCountry.name
                 country.capital = eachCountry.capital
                 country.region = eachCountry.region
+                country.subregion = eachCountry.subRegion
+                country.callingCodes = eachCountry.callingCodes
                 country.population = Int(eachCountry.population)
                 country.area = Int(eachCountry.area)
-                
-
                 country.nativeName = eachCountry.nativeName
                 country.flag = eachCountry.flag
                 country.altSpellings = eachCountry.altSpellings

@@ -1,5 +1,5 @@
 //
-//  SGModelMappable.swift
+//  FCModelMappable.swift
 //  ShopOnGo
 //
 //  Created by eCOM-shabi.naqvi on 06/05/18.
@@ -10,6 +10,6 @@ import Foundation
 import SwiftyJSON
 
 
-protocol SGModelMappable {
+protocol FCModelMappable {
     init?(json: JSON)
 }

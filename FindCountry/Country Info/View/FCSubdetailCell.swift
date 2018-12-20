@@ -17,7 +17,7 @@ class FCSubdetailCell: UICollectionViewCell {
         layout.scrollDirection = .vertical
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .yellow
+        collectionView.backgroundColor = UIColor(red: 245/255, green: 227/255, blue: 204/255, alpha: 1.0)
         return collectionView
     }()
     
@@ -50,7 +50,7 @@ class FCSubdetailCell: UICollectionViewCell {
 
 extension FCSubdetailCell: UICollectionViewDataSource {
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return 5
+        return 6
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -64,6 +64,8 @@ extension FCSubdetailCell: UICollectionViewDataSource {
             return self.countryDetail?.regionalBlocs?.count ?? 0
         } else if section == 4 {
             return self.countryDetail?.timezones?.count ?? 0
+        } else if section == 5 {
+            return self.countryDetail?.callingCodes?.count ?? 0
         }
         return 0
     }
@@ -81,6 +83,8 @@ extension FCSubdetailCell: UICollectionViewDataSource {
             cell.configure(titleInfo: self.countryDetail?.regionalBlocs?[indexPath.row].acronym ?? "")
         } else if indexPath.section == 4 {
             cell.configure(titleInfo: self.countryDetail?.timezones?[indexPath.row] ?? "")
+        } else if indexPath.section == 5 {
+            cell.configure(titleInfo: self.countryDetail?.callingCodes?[indexPath.row] ?? "")
         }
         return cell
     }
@@ -98,6 +102,8 @@ extension FCSubdetailCell: UICollectionViewDataSource {
             headerView.configureHeader(titleInfo: "Regional Blocs")
         } else if indexPath.section == 4 {
             headerView.configureHeader(titleInfo: "TimeZones")
+        } else if indexPath.section == 5 {
+            headerView.configureHeader(titleInfo: "Calling Codes")
         }
         
         return headerView
@@ -117,6 +123,8 @@ extension FCSubdetailCell: UICollectionViewDelegateFlowLayout {
             height = FCTitleCell.textHeight(self.countryDetail?.regionalBlocs?[indexPath.row].acronym ?? "", width: collectionView.bounds.width)
         } else if indexPath.section == 4 {
             height = FCTitleCell.textHeight(self.countryDetail?.timezones?[indexPath.row] ?? "", width: collectionView.bounds.width)
+        } else if indexPath.section == 5 {
+            height = FCTitleCell.textHeight(self.countryDetail?.callingCodes?[indexPath.row] ?? "", width: collectionView.bounds.width)
         }
         return CGSize(width: collectionView.bounds.width, height: height)
     }
@@ -130,7 +138,10 @@ extension FCSubdetailCell: UICollectionViewDelegateFlowLayout {
             return .zero
         } else if section == 4, let timezones = self.countryDetail?.timezones, timezones.count == 0 {
             return .zero
+        } else if section == 4, let timezones = self.countryDetail?.callingCodes, timezones.count == 0 {
+            return .zero
         }
+        
         return CGSize(width: collectionView.bounds.width, height: 22)
     }
 }

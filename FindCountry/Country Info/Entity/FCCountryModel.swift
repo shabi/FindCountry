@@ -9,7 +9,7 @@
 import Foundation
 import SwiftyJSON
 
-public class FCCountryModel : SGModelMappable {
+public class FCCountryModel : FCModelMappable {
     
     // MARK: Declaration for string constants to be used to decode and also serialize.
     private struct SerializationKeys {

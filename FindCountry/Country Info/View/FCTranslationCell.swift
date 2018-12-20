@@ -44,14 +44,12 @@ class FCTranslationCell: UICollectionViewCell {
         layout.minimumLineSpacing = 4
         layout.scrollDirection = .vertical
         let translationList = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        translationList.backgroundColor = .red
+        translationList.backgroundColor = UIColor(red: 245/255, green: 193/255, blue: 100/255, alpha: 1.0)
         return translationList
     }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .red
-
         //Extension method implemented
         self.setCornerRadiusAndShadow(radius: 6.0, shadowOffset: 2.0)
         self.setupUI()

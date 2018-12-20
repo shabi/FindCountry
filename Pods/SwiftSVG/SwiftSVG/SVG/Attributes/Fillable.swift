@@ -93,7 +93,7 @@ extension Fillable where Self : SVGShapeElement {
         guard let opacity = CGFloat(opacity) else {
             return
         }
-        guard let colorComponents = self.svgLayer.fillColor?.components else {
+        guard let colorComponents = self.svgLayer.fillColor?.components, colorComponents.count > 0 else {
             return
         }
         self.svgLayer.fillColor = UIColor(red: colorComponents[0], green: colorComponents[1], blue: colorComponents[2], alpha: opacity).cgColor

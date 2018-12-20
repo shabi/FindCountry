@@ -1,7 +1,7 @@
 import Foundation
 import SwiftyJSON
 
-public class Languages : SGModelMappable {
+public class Languages : FCModelMappable {
     
     // MARK: Declaration for string constants to be used to decode and also serialize.
     private struct SerializationKeys {

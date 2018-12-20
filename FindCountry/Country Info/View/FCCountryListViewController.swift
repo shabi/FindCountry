@@ -14,6 +14,7 @@ class FCCountryListViewController: UIViewController {
     var countryListViewModel: FCCountryListViewModel?
     @IBOutlet weak var searchBarView: UISearchBar!
     @IBOutlet weak var countryListCollectionView: UICollectionView!
+    @IBOutlet weak var searchBarPosition: NSLayoutConstraint!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -55,6 +56,12 @@ class FCCountryListViewController: UIViewController {
     }
     
     func setupUI() {
+        
+        if FCUtility.isIphoneX() {
+            self.searchBarPosition.constant = 84
+        } else {
+            self.searchBarPosition.constant = 70
+        }
         
         let nav = self.navigationController?.navigationBar
         nav?.barStyle = UIBarStyle.black
@@ -120,8 +127,8 @@ extension FCCountryListViewController: UISearchBarDelegate {
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
-//        self.resetCollectionViewData(searchText:"")
         print("searchBarCancelButtonClicked")
+        self.searchBarView.endEditing(true)
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {

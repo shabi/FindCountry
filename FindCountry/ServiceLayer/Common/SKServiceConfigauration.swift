@@ -25,7 +25,7 @@ class SKServiceConfigauration {
             finalheaders = headers
         }
         
-        finalheaders["User-Agent"] = self.getUserAgentInfo()
+//        finalheaders["User-Agent"] = self.getUserAgentInfo()
         self.configuration = URLSessionConfiguration.default
         self.configuration?.timeoutIntervalForRequest = 60
         self.configuration?.httpAdditionalHeaders = finalheaders
