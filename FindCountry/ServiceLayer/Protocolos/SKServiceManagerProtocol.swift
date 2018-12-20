@@ -26,11 +26,6 @@ public protocol SKServiceManagerDelegate {
     func didReceiveError(serviceType: String, theError: Error?, failureResponse: Any?) -> [String: String]?
 }
 
-public protocol SKServiceManagerImageDownloadDelegate {
-    
-    func didReceiveImage(serviceType: String, finalResponse: Any?)
-}
-
 protocol APIDelegateViewModel: class {
     
     func apiSuccess(serviceType: String, model: Any?, isFromCache: Bool)

@@ -10,37 +10,16 @@ import Foundation
 import Alamofire
 import AlamofireImage
 
-class Session  {
-    fileprivate var httpMethod: Alamofire.HTTPMethod?
-    fileprivate var url: String?
-    
-    fileprivate var headers: [String : String]?
-    fileprivate var parameters : [String : AnyObject]?
-    fileprivate var serviceType: String = ""
-    
-    public init(httpMethod: Alamofire.HTTPMethod? = nil, url: String? = nil,
-                headers: [String : String]?, parameters: [String : AnyObject]?, serviceType: String = "") {
-        self.httpMethod = httpMethod
-        self.url = url
-        self.headers = headers
-        self.parameters = parameters
-        self.serviceType = serviceType
-    }
-}
-
 public class SKServiceManager {
     
     //MARK: - Properties
     public static let shared = SKServiceManager()
     private var configuration = SKServiceConfigauration()
-    private var sessionManager: Alamofire.SessionManager?
     private var currentRequest: Alamofire.Request?
     
     private var serviceType: String = ""
     private var delegate: SKServiceManagerDelegate?
     private var datasource: SKServiceManagerDataSource?
-    
-    private var session: Session?
     
     /// Reachability status of network calls
     weak public private(set) var reachability = NetworkReachabilityManager(host: "www.apple.com")
@@ -78,7 +57,6 @@ public class SKServiceManager {
         if Utility.isNilOrEmpty(string: url as NSString?) {
             self.handleFailure(error: Utility.createErrorInstance(title: "Improper URL", message: "Please check the url you have requested", errorCode: 401))
         } else {
-            self.session = Session(httpMethod: httpMethodType, url: url, headers: headers, parameters: parameters, serviceType: self.serviceType)
             self.processServiceRequest(method: httpMethodType, url: url, headers: headers, parameters: parameters)
         }
         self.datasource = nil
@@ -152,21 +130,6 @@ public class SKServiceManager {
         }
     }
     
-    //MARK: - Refresh failed session
-    func refreshSession(session: Session?) {
-        self.processServiceRequest(method: session?.httpMethod, url: session?.url, headers: session?.headers, parameters: session?.parameters)
-    }
-    
-    //MARK: - Image Download - Alamofire
-    public class func downoadImage(imageURL: String?, completionHandler: ((UIImage?) -> Void)?) {
-        
-        Alamofire.request(imageURL!, method: .get).responseImage { response in
-            
-            if let responseImage = response.result.value {
-                completionHandler?(responseImage)
-            }
-        }
-    }
     
     //MARK: - Success and Failure - Alamofire
     

@@ -30,17 +30,6 @@ class FCUtility: NSObject {
         sharedDelegate.window?.rootViewController?.present(alert, animated: true, completion: nil)
     }
     
-    public class func displayAlertInController(controller: UIViewController?,
-                                               title: String? = "", message: String?, actionTitles:String?...,
-        actions:[((UIAlertAction) -> Void)?]?) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        for (index, title) in actionTitles.enumerated() {
-            let action = UIAlertAction(title: title, style: .default, handler: actions?[index])
-            alert.addAction(action)
-        }
-        controller?.present(alert, animated: true, completion: nil)
-    }
-    
     public class func isIphoneX() -> Bool {
         if UIDevice().userInterfaceIdiom == .phone {
             switch UIScreen.main.nativeBounds.height {

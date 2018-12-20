@@ -86,7 +86,7 @@ class FCCountryDetailViewController: UIViewController {
     
     @IBAction func saveCountryDetail(_ sender: UIButton) {
         if FCDatabaseHelper.shared.isExist(searchText: self.countryDetail?.name ?? "") {
-            FCUtility.showAlert(title: "Saved", message: "This Country is Saved!!", actionTitles: "Ok", actions: nil)
+            FCUtility.showAlert(title: "Saved", message: "This Country is Already Saved!!", actionTitles: "Ok", actions: nil)
             return
         }
         FCDatabaseHelper.shared.save(country: self.countryDetail)
